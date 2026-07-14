@@ -1,134 +1,176 @@
-[English](/README.md) | [فارسی](/fa.readme.md) | [العربية](/README.ar_EG.md) | [中文](/README.zh_CN.md) | [Español](/README.es_ES.md) | [Русский](/README.ru_RU.md) | [Türkçe](/README.tr_TR.md)
+<div align="center">
+  <br>
+  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=60&duration=3000&pause=500&color=F97316&center=true&vCenter=true&width=600&height=80&lines=TK-SX" alt="TK-SX">
+  <br>
+  <h3 style="color:#F97316; font-size:24px; font-weight:300; letter-spacing:4px;">
+    ⚡ THE ULTIMATE VPN MANAGEMENT PANEL ⚡
+  </h3>
+  <br>
+  <p style="color:#B0B0B0; font-size:14px;">
+    <a href="#english" style="color:#F97316; font-weight:700;">English</a> &nbsp;·&nbsp;
+    <a href="#persian" style="color:#B0B0B0;">فارسی</a>
+  </p>
+  <br>
+  <img src="https://img.shields.io/github/v/release/ItzJustEren/TK-SX?style=for-the-badge&color=F97316&label=Release" alt="Release">
+  <img src="https://img.shields.io/github/license/ItzJustEren/TK-SX?style=for-the-badge&color=F97316" alt="License">
+  <img src="https://img.shields.io/badge/Python-3.12-F97316?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/FastAPI-0.104-F97316?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/Railway-Ready-F97316?style=for-the-badge&logo=railway&logoColor=white" alt="Railway">
+  <br><br>
+</div>
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ItzJustEren/TK-SX/main/media/tk-sx-dark.png">
-    <img alt="TK-SX" src="https://raw.githubusercontent.com/ItzJustEren/TK-SX/main/media/tk-sx-light.png">
-  </picture>
-</p>
+---
 
-<p align="center">
-  <a href="https://github.com/ItzJustEren/TK-SX/releases"><img src="https://img.shields.io/github/v/release/ItzJustEren/TK-SX" alt="Release"></a>
-  <a href="https://github.com/ItzJustEren/TK-SX/actions"><img src="https://img.shields.io/github/actions/workflow/status/ItzJustEren/TK-SX/release.yml" alt="Build"></a>
-  <a href="#"><img src="https://img.shields.io/github/go-mod/go-version/ItzJustEren/TK-SX" alt="Python Version"></a>
-  <a href="https://github.com/ItzJustEren/TK-SX/releases/latest"><img src="https://img.shields.io/github/downloads/ItzJustEren/TK-SX/total" alt="Downloads"></a>
-  <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/license-GPL%20V3-blue.svg?longCache=true" alt="License"></a>
-  <a href="https://pkg.go.dev/github.com/ItzJustEren/TK-SX"><img src="https://pkg.go.dev/badge/github.com/ItzJustEren/TK-SX" alt="Python Reference"></a>
-</p>
+## 🚀 What is TK-SX?
 
-**TK-SX** is an advanced, open-source web control panel for managing [Sing-box](https://github.com/SagerNet/sing-box) servers. It provides a clean, multi-language interface for deploying, configuring, and monitoring a wide range of proxy and VPN protocols — from a single VPS to multi‑node deployments.
+**TK-SX** is a **next-generation VPN management panel** built on the powerful **Sing-box** core. It combines a professional web dashboard, a **complete Telegram store bot (Cyrus Bot)** with all Mirza Bot features, and a beautiful **Mini App** for mobile management — all in one seamless package.
 
-Built on top of a powerful Python/FastAPI stack, TK-SX brings together **the best of X-UI and Mirza Bot**, combining a full-featured admin panel with an integrated Telegram store bot in one seamless package.
+Designed for **Railway** and capable of handling **15+ concurrent users** with minimal resource usage, TK-SX is the ultimate solution for VPN providers, resellers, and individual users who want a **fully automated** system.
 
-> [!IMPORTANT]
-> This project is intended for personal use only. Please do not use it for illegal purposes or in a production environment.
+---
 
-## Features
+## ✨ Features
 
-- **Multi‑protocol inbounds** — VLESS, VMess, Trojan, Shadowsocks, WireGuard, Hysteria2, HTTP, SOCKS5, TUN, Dokodemo‑door, and Snell.
-- **Modern transports & security** — WebSocket, gRPC, HTTPUpgrade, XHTTP, plus TLS, XTLS, REALITY, and full UDP over TCP support.
-- **Per‑client management** — traffic quotas, expiry dates, IP limits, live online status, one‑click share links, QR codes, and subscriptions.
-- **Integrated Telegram store bot (Cyrus Bot)** — automated product purchasing, free trials, renewals, referrals, discount codes, lottery, and full admin controls directly inside Telegram.
-- **Built‑in wallet system** — users can top up and pay from balance; admins can charge users directly.
-- **Affiliate / referral system** — 10% commission on referred purchases.
-- **Discount codes & gift codes** — flexible promo system with usage limits.
-- **Lottery system** — tickets earned per purchase.
-- **XHTTP Ultra transport** — packet‑up and stream‑up modes with adaptive flow control.
-- **Traffic statistics** — per inbound, per client, with hourly charts and live monitoring.
-- **Multi‑node support** — manage and scale across multiple servers from a single panel.
-- **RESTful API** — fully documented, accessible via Swagger.
-- **Flexible storage** — JSON‑based persistence (lightweight, no database required) with optional migration to SQLite/PostgreSQL.
-- **14 UI languages** with dark and light themes (RTL and LTR).
-- **Mini App** — mobile‑friendly admin dashboard with eagle‑themed design, accessible directly from Telegram.
+### 🔥 Core Panel
+- **11 VPN Protocols** — VLESS, VMess, Trojan, Shadowsocks, SOCKS5, HTTP, WireGuard, Hysteria2, TUN, Dokodemo-door, Snell
+- **UDP over TCP** for WireGuard & Hysteria2 (bypasses Railway UDP limitations)
+- **XHTTP Ultra** with packet-up & stream-up modes (adaptive flow control)
+- **Real-time connection monitoring** with IP tracking
+- **Subscription groups** with public pages and password protection
+- **Traffic charts** — hourly, daily, peak usage
+- **Full Persian/English UI** with dark/light themes
 
-## Screenshots
+### 💰 Wallet & Payments
+- **Built-in wallet system** with transaction history
+- **Card-to-card payments** with receipt verification
+- **Reymit payment gateway** integration
+- **Telegram Stars** support (configurable rate)
+- **Gift payments** (send to @ItzJustEren with clear instructions)
 
-<details>
-<summary>Click to expand</summary>
+### 🔗 Referral & Marketing
+- **Affiliate system** — 10% commission on referrals
+- **Unique referral codes** for each user
+- **Discount codes** (admin-created, with usage limits)
+- **Lottery system** with tickets per purchase
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./media/01-overview-dark.png">
-  <img alt="Overview" src="./media/01-overview-light.png">
-</picture>
+### 🤖 Cyrus Bot (Telegram Store)
+- **Automated product purchasing**
+- **Free trial** (50MB, once a week)
+- **Subscription renewal** with one click
+- **User leveling** (Level 10 = 5GB free bonus)
+- **Order approval/rejection** with reasons (fake receipt, late submission)
+- **User feedback system** with admin approval
+- **Full admin panel** inside Telegram
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./media/02-add-inbound-dark.png">
-  <img alt="Inbounds" src="./media/02-add-inbound-light.png">
-</picture>
+### 🖥️ Mini App (Mobile Dashboard)
+- **Login page** with welcome message
+- **Real-time stats** — connections, links, products, orders
+- **Quick access** to main panel and Telegram bot
+- **Ice-blue & black theme** with eagle logo
+- **Fully responsive** for mobile
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./media/03-add-client-dark.png">
-  <img alt="Add client" src="./media/03-add-client-light.png">
-</picture>
+---
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./media/04-bot-panel-dark.png">
-  <img alt="Bot panel" src="./media/04-bot-panel-light.png">
-</picture>
+## 📦 Supported Protocols
 
-</details>
+| Protocol | V2RayNG | Sing-box Client | UDP over TCP |
+|----------|---------|-----------------|--------------|
+| **VLESS** | ✅ | ✅ | ❌ |
+| **VMess** | ✅ | ✅ | ❌ |
+| **Trojan** | ✅ | ✅ | ❌ |
+| **Shadowsocks** | ✅ | ✅ | ❌ |
+| **SOCKS5** | ✅ | ✅ | ❌ |
+| **HTTP** | ✅ | ✅ | ❌ |
+| **WireGuard** | ❌ | ✅ | ✅ |
+| **Hysteria2** | ❌ | ✅ | ✅ |
+| **TUN** | ❌ | ✅ | ❌ |
+| **Dokodemo-door** | ❌ | ✅ | ❌ |
+| **Snell** | ❌ | ✅ | ❌ |
 
-## Supported Platforms
+---
 
-**Operating systems:** Ubuntu, Debian, Fedora, CentOS, RHEL, AlmaLinux, Rocky Linux, Arch, openSUSE, Alpine, and Windows (via Docker).
+## 📁 Project Structure
+TK-SX/
+├── main.py # FastAPI core with all APIs
+├── telegram_bot.py # Cyrus Bot (full Mirza features)
+├── singbox_manager.py # Sing-box management + UDP over TCP
+├── relay.py # WebSocket handler
+├── xhttp.py # XHTTP Ultra transport
+├── speed_limit.py # Token Bucket rate limiter
+├── pages.py # All HTML pages (panel + mini-app)
+├── requirements.txt # Python dependencies
+├── Dockerfile # For Railway deployment
+├── railway.json # Railway build config
+├── README.md # This file
+└── fa.readme.md # Persian version
 
-**Architectures:** `amd64` · `arm64` · `armv7`.
+---
 
-## Database Options
-
-TK-SX uses a simple JSON file (`/data/tksx_state.json`) by default — zero configuration, perfect for small to medium deployments. For high‑client or multi‑node setups, you can switch to SQLite or PostgreSQL.
-
-## Environment Variables
+## ⚙️ Environment Variables
 
 | Variable | Description | Default |
-| --- | --- | --- |
+|----------|-------------|---------|
 | `PORT` | Web server port | `8000` |
 | `TELEGRAM_BOT_TOKEN` | Bot token from @BotFather | — |
 | `ADMIN_PASSWORD` | Admin panel password | `taakaa` |
-| `CARD_NUMBER` | Default card number shown to users | `6037-9910-1234-5678` |
+| `CARD_NUMBER` | Default card number | `6037-9910-1234-5678` |
 | `CARD_OWNER_NAME` | Card owner name | `نام صاحب کارت` |
-| `PRICE_PER_GB` | Price per GB (in thousand tomans) | `6` |
-| `REQUIRED_CHANNEL` | Telegram channel users must join | `@TaaKaaOrg` |
+| `PRICE_PER_GB` | Price per GB (thousand tomans) | `6` |
+| `REQUIRED_CHANNEL` | Required channel for bot | `@TaaKaaOrg` |
 | `ADMIN_GROUP_ID` | Group ID for card submissions | — |
-| `STARS_RATE` | Telegram Stars exchange rate (toman per star) | `1000` |
+| `STARS_RATE` | Telegram Stars rate (toman/star) | `1000` |
 | `BOT_USERNAME` | Bot username for referral links | `CyrusBot` |
-| `DATA_DIR` | Directory for state file | `/data` |
 
-## Supported Languages
+---
 
-The panel UI is available in 14 languages:
+## 📱 Client Apps
 
-English · فارسی · العربية · 中文（简体） · 中文（繁體） · Español · Русский · Українська · Türkçe · Tiếng Việt · 日本語 · Bahasa Indonesia · Português (Brasil) · Deutsch
+| App | Protocols | Platform |
+|-----|-----------|----------|
+| **V2RayNG** | VLESS, VMess, Trojan, Shadowsocks, SOCKS5, HTTP | Android |
+| **Nekobox** | VLESS, VMess, Trojan, Shadowsocks, SOCKS5, HTTP | Android |
+| **Hiddify** | All protocols (Sing-box core) | Android, iOS |
+| **Sing-box** | All protocols | All platforms |
+| **Streisand** | All protocols | iOS |
+| **Quantumult X** | VLESS, VMess, Trojan | iOS |
 
-## Contributing
+---
 
-Contributions are welcome. Please read the [Contributing Guide](/CONTRIBUTING.md) before opening an issue or pull request.
+## 🛠️ Built With
 
-## A Special Thanks to
+- **[FastAPI](https://fastapi.tiangolo.com/)** — Web framework
+- **[Sing-box](https://github.com/SagerNet/sing-box)** — Core proxy engine
+- **[Aiogram](https://docs.aiogram.dev/)** — Telegram bot framework
+- **[Tabler Icons](https://tabler.io/icons)** — UI icons
+- **[Chart.js](https://www.chart.js/)** — Traffic charts
+- **[Docker](https://www.docker.com/)** — Containerization
 
-- [alireza0](https://github.com/alireza0/) for the original S-UI design.
-- [MHSanaei](https://github.com/MHSanaei/) for the 3x-ui panel inspiration.
-- [SagerNet](https://github.com/SagerNet/) for the Sing‑box core.
+---
 
-## Acknowledgment
+## 📞 Support & Community
 
-- [Iran v2ray rules](https://github.com/chocolate4u/Iran-v2ray-rules) (License: **GPL-3.0**): _Enhanced v2ray/xray routing rules with built‑in Iranian domains and a focus on security and adblocking._
-- [Russia v2ray rules](https://github.com/runetfreedom/russia-v2ray-rules-dat) (License: **GPL-3.0**): _Automatically updated V2Ray routing rules based on data on blocked domains and addresses in Russia._
+- **Telegram Support**: [@ItzJustEren](https://t.me/ItzJustEren)
+- **Telegram Channel**: [@TaaKaaOrg](https://t.me/TaaKaaOrg)
+- **GitHub Issues**: [Report a bug](https://github.com/ItzJustEren/TK-SX/issues)
 
-## Community Tools
+---
 
-Tools and integrations built by the community around TK‑SX.
+## 🌟 Support the Project
 
-- [terraform-provider-tksx](https://github.com/example/terraform-provider-tksx) (License: **MIT**): _Manage inbounds, clients, and panel settings as code with Terraform._
-
-## Support the project
-
-**If this project is helpful to you, you may wish to give it a**:star2:
+**If you like this project, please give it a star!** ⭐
 
 <a href="https://www.buymeacoffee.com/ItzJustEren" target="_blank">
-<img src="./media/default-yellow.png" alt="Buy Me A Coffee" style="height: 70px !important;width: 277px !important;" >
+  <img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg" alt="Buy Me A Coffee" height="40">
 </a>
 
-## Stargazers over Time
+---
 
-[![Stargazers over time](https://starchart.cc/ItzJustEren/TK-SX.svg?variant=adaptive)](https://starchart.cc/ItzJustEren/TK-SX)
+<div align="center">
+  <br>
+  <p style="color:#6B6B6B; font-size:12px;">
+    Made with ❤️ by <a href="https://github.com/ItzJustEren" style="color:#F97316;">ItzJustEren</a> &amp; <a href="https://t.me/TaaKaaOrg" style="color:#F97316;">TaaKaa Team</a>
+  </p>
+  <br>
+</div>
+
+
