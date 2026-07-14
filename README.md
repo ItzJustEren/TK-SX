@@ -7,8 +7,8 @@
   </h3>
   <br>
   <p style="color:#B0B0B0; font-size:14px;">
-    <a href="#english" style="color:#F97316; font-weight:700;">English</a> &nbsp;·&nbsp;
-    <a href="#persian" style="color:#B0B0B0;">فارسی</a>
+    <a href="https://github.com/ItzJustEren/TK-SX/blob/main/README.md" style="color:#F97316; font-weight:700;">English</a> &nbsp;·&nbsp;
+    <a href="https://github.com/ItzJustEren/TK-SX/blob/main/fa.readme.md" style="color:#F97316; font-weight:700;">فارسی</a>
   </p>
   <br>
   <img src="https://img.shields.io/github/v/release/ItzJustEren/TK-SX?style=for-the-badge&color=F97316&label=Release" alt="Release">
@@ -172,5 +172,3 @@ TK-SX/
   </p>
   <br>
 </div>
-
-
