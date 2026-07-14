@@ -276,9 +276,10 @@ document.getElementById('pw').addEventListener('keydown', e => { if(e.key === 'E
 </body></html>"""
 
 
-# ── صفحه پابلیک گروه‌ها ──────────────────────────────────────────────────────
+# ── صفحه پابلیک گروه‌ها (رفع کامل خطای SyntaxError) ──────────────────────
 def get_public_page_html(uuid_key: str) -> str:
-    return f"""<!DOCTYPE html>
+    return (
+        r"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -287,44 +288,44 @@ def get_public_page_html(uuid_key: str) -> str:
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <style>
-*{{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}}
-:root{{--bg:#0a0a0a;--bg2:#141414;--bg3:#1e1e1e;--card:#1a1a1a;--card-b:rgba(249,115,22,0.15);--card-bh:rgba(249,115,22,0.35);--accent:#F97316;--accent2:#FB923C;--accent-d:rgba(249,115,22,0.1);--green:#10B981;--green-bg:rgba(16,185,129,0.1);--green-t:#34D399;--red:#EF4444;--red-bg:rgba(239,68,68,0.1);--red-t:#F87171;--amber:#F59E0B;--amber-bg:rgba(245,158,11,0.1);--amber-t:#FCD34D;--purple:#9D7BF0;--purple-bg:rgba(157,123,240,0.1);--purple-t:#BCA4F7;--t1:#F5F5F5;--t2:#B0B0B0;--t3:#6B6B6B;--radius:18px;--shadow:0 12px 40px rgba(0,0,0,0.5);--serif:'Vazirmatn',sans-serif;}}
-[data-theme="light"]{{--bg:#F5F5F5;--bg2:#E8E8E8;--bg3:#DCDCDC;--card:#FFFFFF;--card-b:rgba(249,115,22,0.2);--card-bh:rgba(249,115,22,0.4);--accent:#EA580C;--accent2:#F97316;--accent-d:rgba(234,88,12,0.08);--green:#059669;--green-bg:rgba(5,150,105,0.08);--green-t:#065F46;--red:#DC2626;--red-bg:rgba(220,38,38,0.08);--red-t:#991B1B;--amber:#D97706;--amber-bg:rgba(217,119,6,0.08);--amber-t:#92400E;--purple:#7C3AED;--purple-bg:rgba(124,58,237,0.08);--t1:#1a1a1a;--t2:#444444;--t3:#777777;--shadow:0 12px 36px rgba(20,40,90,0.12);}}
-html,body{{min-height:100%;background:var(--bg);font-family:var(--serif);color:var(--t1);font-size:14px;transition:background .35s,color .35s}}
-.bg-fx{{position:fixed;inset:0;background:radial-gradient(ellipse 70% 45% at 50% -8%,rgba(249,115,22,0.13),transparent 62%),var(--bg);z-index:0;pointer-events:none}}
-.wrap{{position:relative;z-index:10;max-width:800px;margin:0 auto;padding:24px 16px 64px}}
-.brand{{display:flex;align-items:center;gap:12px;margin-bottom:20px}}
-.brand-img{{width:40px;height:40px;border-radius:50%;overflow:hidden;border:1px solid var(--card-b);box-shadow:0 0 14px rgba(249,115,22,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--accent);font-weight:900;font-size:18px}}
-.brand-text{{font-size:18px;font-weight:800;color:var(--t1)}}
-.brand-text span{{color:var(--accent)}}
-.sub-box{{background:var(--card);border:1px solid var(--card-b);border-radius:18px;padding:22px 24px;margin-bottom:16px;box-shadow:var(--shadow)}}
-.sub-name{{font-size:20px;font-weight:800;margin-bottom:4px}}
-.sub-desc{{font-size:12px;color:var(--t3);margin-bottom:12px}}
-.sub-url{{font-family:ui-monospace,monospace;font-size:10.5px;color:var(--accent2);word-break:break-all;background:var(--accent-d);padding:10px 14px;border-radius:10px;border:1px solid var(--card-b);display:flex;align-items:center;gap:8px;flex-wrap:wrap}}
-.sub-url span{{flex:1;min-width:120px}}
-.stats{{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}}
-.stat{{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:14px 16px;text-align:center}}
-.stat-val{{font-size:20px;font-weight:800}}
-.stat-label{{font-size:9.5px;color:var(--t3);margin-top:4px}}
-.cfg-list{{display:flex;flex-direction:column;gap:10px}}
-.cfg-item{{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:14px 18px;transition:.2s}}
-.cfg-item:hover{{border-color:var(--card-bh)}}
-.cfg-head{{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}}
-.cfg-label{{font-weight:700;font-size:13.5px}}
-.cfg-status{{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}}
-.cfg-status.on{{background:var(--green-bg);color:var(--green-t)}}
-.cfg-status.off{{background:var(--red-bg);color:var(--red-t)}}
-.cfg-usage{{font-size:10px;color:var(--t3);margin-top:6px}}
-.cfg-actions{{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}}
-.btn{{font-family:inherit;font-size:10.5px;font-weight:700;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:.15s}}
-.btn-p{{background:linear-gradient(135deg,#F97316,#EA580C);color:#fff}}
-.btn-g{{background:var(--accent-d);color:var(--accent2);border:1px solid rgba(249,115,22,.15)}}
-.btn-g:hover{{background:rgba(249,115,22,.2)}}
-.toast{{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--card);border:1px solid var(--card-b);color:var(--t1);border-radius:10px;padding:8px 18px;font-size:12px;opacity:0;transition:.25s;z-index:999;box-shadow:var(--shadow);white-space:nowrap}}
-.toast.show{{opacity:1;transform:translateX(-50%) translateY(0)}}
-.toast.ok{{border-color:rgba(16,185,129,.3);background:var(--green-bg);color:var(--green-t)}}
-.empty{{text-align:center;padding:50px 20px;color:var(--t3)}}
-.empty i{{font-size:36px;opacity:.3;display:block;margin-bottom:12px}}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0a0a0a;--bg2:#141414;--bg3:#1e1e1e;--card:#1a1a1a;--card-b:rgba(249,115,22,0.15);--card-bh:rgba(249,115,22,0.35);--accent:#F97316;--accent2:#FB923C;--accent-d:rgba(249,115,22,0.1);--green:#10B981;--green-bg:rgba(16,185,129,0.1);--green-t:#34D399;--red:#EF4444;--red-bg:rgba(239,68,68,0.1);--red-t:#F87171;--amber:#F59E0B;--amber-bg:rgba(245,158,11,0.1);--amber-t:#FCD34D;--purple:#9D7BF0;--purple-bg:rgba(157,123,240,0.1);--purple-t:#BCA4F7;--t1:#F5F5F5;--t2:#B0B0B0;--t3:#6B6B6B;--radius:18px;--shadow:0 12px 40px rgba(0,0,0,0.5);--serif:'Vazirmatn',sans-serif;}
+[data-theme="light"]{--bg:#F5F5F5;--bg2:#E8E8E8;--bg3:#DCDCDC;--card:#FFFFFF;--card-b:rgba(249,115,22,0.2);--card-bh:rgba(249,115,22,0.4);--accent:#EA580C;--accent2:#F97316;--accent-d:rgba(234,88,12,0.08);--green:#059669;--green-bg:rgba(5,150,105,0.08);--green-t:#065F46;--red:#DC2626;--red-bg:rgba(220,38,38,0.08);--red-t:#991B1B;--amber:#D97706;--amber-bg:rgba(217,119,6,0.08);--amber-t:#92400E;--purple:#7C3AED;--purple-bg:rgba(124,58,237,0.08);--t1:#1a1a1a;--t2:#444444;--t3:#777777;--shadow:0 12px 36px rgba(20,40,90,0.12);}
+html,body{min-height:100%;background:var(--bg);font-family:var(--serif);color:var(--t1);font-size:14px;transition:background .35s,color .35s}
+.bg-fx{position:fixed;inset:0;background:radial-gradient(ellipse 70% 45% at 50% -8%,rgba(249,115,22,0.13),transparent 62%),var(--bg);z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:10;max-width:800px;margin:0 auto;padding:24px 16px 64px}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.brand-img{width:40px;height:40px;border-radius:50%;overflow:hidden;border:1px solid var(--card-b);box-shadow:0 0 14px rgba(249,115,22,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--accent);font-weight:900;font-size:18px}
+.brand-text{font-size:18px;font-weight:800;color:var(--t1)}
+.brand-text span{color:var(--accent)}
+.sub-box{background:var(--card);border:1px solid var(--card-b);border-radius:18px;padding:22px 24px;margin-bottom:16px;box-shadow:var(--shadow)}
+.sub-name{font-size:20px;font-weight:800;margin-bottom:4px}
+.sub-desc{font-size:12px;color:var(--t3);margin-bottom:12px}
+.sub-url{font-family:ui-monospace,monospace;font-size:10.5px;color:var(--accent2);word-break:break-all;background:var(--accent-d);padding:10px 14px;border-radius:10px;border:1px solid var(--card-b);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sub-url span{flex:1;min-width:120px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:14px 16px;text-align:center}
+.stat-val{font-size:20px;font-weight:800}
+.stat-label{font-size:9.5px;color:var(--t3);margin-top:4px}
+.cfg-list{display:flex;flex-direction:column;gap:10px}
+.cfg-item{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:14px 18px;transition:.2s}
+.cfg-item:hover{border-color:var(--card-bh)}
+.cfg-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.cfg-label{font-weight:700;font-size:13.5px}
+.cfg-status{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.cfg-status.on{background:var(--green-bg);color:var(--green-t)}
+.cfg-status.off{background:var(--red-bg);color:var(--red-t)}
+.cfg-usage{font-size:10px;color:var(--t3);margin-top:6px}
+.cfg-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.btn{font-family:inherit;font-size:10.5px;font-weight:700;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:.15s}
+.btn-p{background:linear-gradient(135deg,#F97316,#EA580C);color:#fff}
+.btn-g{background:var(--accent-d);color:var(--accent2);border:1px solid rgba(249,115,22,.15)}
+.btn-g:hover{background:rgba(249,115,22,.2)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--card);border:1px solid var(--card-b);color:var(--t1);border-radius:10px;padding:8px 18px;font-size:12px;opacity:0;transition:.25s;z-index:999;box-shadow:var(--shadow);white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(16,185,129,.3);background:var(--green-bg);color:var(--green-t)}
+.empty{text-align:center;padding:50px 20px;color:var(--t3)}
+.empty i{font-size:36px;opacity:.3;display:block;margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -340,29 +341,35 @@ html,body{{min-height:100%;background:var(--bg);font-family:var(--serif);color:v
   </div>
 </div>
 <script>
-const UUID_KEY='{uuid_key}';
-function esc(s){{return String(s||'').replace(/[&<>"']/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[c]))}}
-function fmtB(b){{if(!b||b===0)return '0 B';if(b<1024)return b+' B';if(b<1024**2)return (b/1024).toFixed(1)+' KB';if(b<1024**3)return (b/1024**2).toFixed(2)+' MB';return (b/1024**3).toFixed(2)+' GB'}}
-function toast(msg,type=''){{const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');setTimeout(()=>t.classList.remove('show'),2200);}}
-async function loadData(){{const r=await fetch('/api/public/sub/'+UUID_KEY);return r.json();}}
-async function init(){{try{{const data=await loadData();if(data.locked){{document.getElementById('root').innerHTML='<div class="empty"><i class="ti ti-lock"></i>این گروه با رمز محافظت شده است</div>';return}}
+const UUID_KEY='""" + uuid_key + """';
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fmtB(b){if(!b||b===0)return '0 B';if(b<1024)return b+' B';if(b<1024**2)return (b/1024).toFixed(1)+' KB';if(b<1024**3)return (b/1024**2).toFixed(2)+' MB';return (b/1024**3).toFixed(2)+' GB';}
+function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');setTimeout(()=>t.classList.remove('show'),2200);}
+async function loadData(){const r=await fetch('/api/public/sub/'+UUID_KEY);return r.json();}
+async function init(){try{const data=await loadData();if(data.locked){document.getElementById('root').innerHTML='<div class="empty"><i class="ti ti-lock"></i>این گروه با رمز محافظت شده است</div>';return}
 const links=data.links||[];const active=links.filter(l=>l.active).length;const totalUsed=links.reduce((s,l)=>s+(l.used_bytes||0),0);
-let html=`<div class="sub-box"><div class="sub-name">${{esc(data.name)}}</div><div class="sub-desc">${{esc(data.desc||'')}}</div><div class="sub-url"><span>${{esc(data.sub_url)}}</span><button class="btn btn-g" onclick="navigator.clipboard.writeText('${{esc(data.sub_url)}}').then(()=>toast('کپی شد ✓','ok'))"><i class="ti ti-copy"></i></button></div></div>
-<div class="stats"><div class="stat"><div class="stat-val">${{active}}</div><div class="stat-label">کانفیگ فعال</div></div>
-<div class="stat"><div class="stat-val">${{data.active_connections||0}}</div><div class="stat-label">اتصال زنده</div></div>
-<div class="stat"><div class="stat-val">${{fmtB(totalUsed)}}</div><div class="stat-label">کل مصرف</div></div></div>
-<div class="cfg-list">`;
-links.forEach(l=>{{
-const pct=l.limit_bytes?Math.min(100,l.used_bytes/l.limit_bytes*100):0;
-const lim=l.limit_bytes?fmtB(l.limit_bytes):'∞';
-html+=`<div class="cfg-item"><div class="cfg-head"><span class="cfg-label">${{esc(l.label)}}</span><span class="cfg-status ${l.active?'on':'off'}">${l.active?'فعال':'غیرفعال'}</span></div>
-<div style="font-size:10px;color:var(--t3);margin:4px 0">${fmtB(l.used_bytes)} / ${lim}</div>
-<div class="cfg-actions"><button class="btn btn-p" onclick="navigator.clipboard.writeText('${{esc(l.link_url)}}').then(()=>toast('کپی شد ✓','ok'))"><i class="ti ti-copy"></i> کپی</button>
-<button class="btn btn-g" onclick="window.open('https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent('${{esc(l.link_url)}}'),'_blank')"><i class="ti ti-qrcode"></i></button></div></div>`;
-}});html+='</div>';document.getElementById('root').innerHTML=html;}}catch(e){{document.getElementById('root').innerHTML='<div class="empty"><i class="ti ti-alert-circle"></i>خطا در بارگذاری</div>'}}}
+let html='<div class="sub-box"><div class="sub-name">' + esc(data.name) + '</div><div class="sub-desc">' + esc(data.desc||'') + '</div><div class="sub-url"><span>' + esc(data.sub_url) + '</span><button class="btn btn-g" onclick="navigator.clipboard.writeText(\'' + esc(data.sub_url) + '\').then(()=>toast(\'کپی شد ✓\',\'ok\'))"><i class="ti ti-copy"></i></button></div></div>';
+html += '<div class="stats"><div class="stat"><div class="stat-val">' + active + '</div><div class="stat-label">کانفیگ فعال</div></div>';
+html += '<div class="stat"><div class="stat-val">' + (data.active_connections||0) + '</div><div class="stat-label">اتصال زنده</div></div>';
+html += '<div class="stat"><div class="stat-val">' + fmtB(totalUsed) + '</div><div class="stat-label">کل مصرف</div></div></div>';
+html += '<div class="cfg-list">';
+for (var i=0; i<links.length; i++) { var l=links[i];
+    var pct = l.limit_bytes ? Math.min(100, l.used_bytes / l.limit_bytes * 100) : 0;
+    var lim = l.limit_bytes ? fmtB(l.limit_bytes) : '∞';
+    var statusClass = l.active ? 'on' : 'off';
+    var statusText = l.active ? 'فعال' : 'غیرفعال';
+    html += '<div class="cfg-item"><div class="cfg-head"><span class="cfg-label">' + esc(l.label) + '</span><span class="cfg-status ' + statusClass + '">' + statusText + '</span></div>';
+    html += '<div style="font-size:10px;color:var(--t3);margin:4px 0">' + fmtB(l.used_bytes) + ' / ' + lim + '</div>';
+    html += '<div class="cfg-actions"><button class="btn btn-p" onclick="navigator.clipboard.writeText(\'' + esc(l.link_url) + '\').then(()=>toast(\'کپی شد ✓\',\'ok\'))"><i class="ti ti-copy"></i> کپی</button>';
+    html += '<button class="btn btn-g" onclick="window.open(\'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=\' + encodeURIComponent(\'' + esc(l.link_url) + '\'),\'_blank\')"><i class="ti ti-qrcode"></i></button></div></div>';
+}
+html += '</div>';
+document.getElementById('root').innerHTML = html;
+} catch(e) { document.getElementById('root').innerHTML = '<div class="empty"><i class="ti ti-alert-circle"></i>خطا در بارگذاری</div>'; }}
 init();
 </script>
 </body></html>"""
+    )
 
 
 # ── داشبورد پنل اصلی (کامل) ───────────────────────────────────────────────────
