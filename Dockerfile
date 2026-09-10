@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     wget unzip curl \
     && rm -rf /var/lib/apt/lists/*
 
-# دانلود و نصب Sing-box (نسخه‌ی پایدار با فرمت tar.gz)
+# دانلود و نصب Sing-box
 RUN curl -L -o sing-box.tar.gz https://github.com/SagerNet/sing-box/releases/download/v1.12.0/sing-box-1.12.0-linux-amd64.tar.gz && \
     tar -xzf sing-box.tar.gz && \
     mv sing-box-1.12.0-linux-amd64/sing-box /usr/local/bin/ && \
@@ -19,4 +19,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# پورت پیش‌فرض (Railway از $PORT استفاده می‌کنه)
+ENV PORT=8000
+EXPOSE 8000
+
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT}"]
