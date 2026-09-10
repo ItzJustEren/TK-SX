@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+
+# Virtual env
+venv/
+env/
+.venv/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Docs
+*.md
+!README.md
+docs/
+
+# Data & Secrets
+data/
+tksx_state.json
+tksx_secret.key
+singbox_config.json
+*.log
+
+# Certificates
+cert.pem
+key.pem
+*.pem
+
+# Telegram bot (غیرفعال)
+telegram_bot.py
+
+# OS
+.DS_Store
+Thumbs.db
