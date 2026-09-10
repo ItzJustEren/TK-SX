@@ -67,7 +67,7 @@ CONFIG = {
     "stars_rate": int(os.environ.get("STARS_RATE", 1000)),
 }
 
-# ── CORS (اصلاح‌شده) ──────────────────────────────────────────────────────────
+# ── CORS ─────────────────────────────────────────────────────────────────────
 _allowed_origins = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
@@ -363,7 +363,7 @@ async def use_discount_code(code: str) -> Optional[int]:
     await save_state()
     return d["percent"]
 
-# ── لینک‌ها با Sing-box ────────────────────────────────────────────────────
+# ── لینک‌ها ─────────────────────────────────────────────────────────────────
 async def make_link(
     label: str = "لینک جدید",
     limit_bytes: int = 0,
@@ -395,17 +395,17 @@ async def make_link(
     for k, v in kwargs.items():
         if v:
             config[k] = v
-    
+
     async with LINKS_LOCK:
         LINKS[uid] = config
-    
+
     if sub_id:
         async with SUBS_LOCK:
             if sub_id in SUBS:
                 ids = SUBS[sub_id].setdefault("link_ids", [])
                 if uid not in ids:
                     ids.append(uid)
-    
+
     await save_state()
     log_activity("link", f"کانفیگ «{label}» ساخته شد ({protocol})", "ok")
     return uid, config
@@ -514,10 +514,6 @@ async def startup():
     http_client = httpx.AsyncClient(limits=limits, timeout=timeout, follow_redirects=True)
     await load_state()
     await singbox_start()
-    try:
-        await _tg_start_bot()
-    except Exception as e:
-        logger.warning(f"Telegram bot could not start: {e}")
     log_activity("system", "TK-SX سرور راه‌اندازی شد", "ok")
     logger.info(f"TK-SX v3.0 started on port {CONFIG['port']}")
 
@@ -525,10 +521,6 @@ async def startup():
 async def shutdown():
     await save_state()
     await singbox_stop()
-    try:
-        await _tg_stop_bot()
-    except Exception:
-        pass
     if http_client:
         await http_client.aclose()
 
@@ -588,7 +580,7 @@ async def create_link(request: Request, _=Depends(require_auth)):
     su = body.get("speed_limit_unit") or "MBIT"
     speed_limit_bytes = 0 if sv <= 0 else parse_speed_to_bytes(sv, su)
     protocol = body.get("protocol") or "vless"
-    
+
     extra = {}
     if protocol == "shadowsocks":
         extra["method"] = body.get("method", "aes-256-gcm")
@@ -599,7 +591,7 @@ async def create_link(request: Request, _=Depends(require_auth)):
         extra["address"] = body.get("address", "10.0.0.2/32")
     elif protocol == "snell":
         extra["psk"] = body.get("psk", secrets.token_urlsafe(16))
-    
+
     uid, link = await make_link(
         label=body.get("label") or "لینک جدید",
         limit_bytes=limit_bytes,
@@ -612,10 +604,10 @@ async def create_link(request: Request, _=Depends(require_auth)):
         speed_limit_bytes=speed_limit_bytes,
         **extra
     )
-    
+
     host = get_host(request)
     link_url = generate_link_url(uid, link, host)
-    
+
     return {
         "uuid": uid,
         **link,
@@ -902,7 +894,7 @@ async def add_wallet(request: Request, _=Depends(require_auth)):
     description = body.get("description", "شارژ کیف پول")
     if not user_id or not amount or amount <= 0:
         raise HTTPException(400, "user_id و amount مثبت الزامی هستند")
-    await add_balance(user_id, amount, description, request.state.user_id if hasattr(request.state, 'user_id') else None)
+    await add_balance(user_id, amount, description)
     return {"ok": True}
 
 # ── Card API ─────────────────────────────────────────────────────────────────
@@ -948,7 +940,7 @@ async def create_discount(request: Request, _=Depends(require_auth)):
     if not code or not percent:
         raise HTTPException(400, "کد و درصد الزامی هستند")
     expires_at = (datetime.now() + timedelta(days=expires_days)).isoformat()
-    result = await create_discount_code(code, percent, max_uses, expires_at, request.state.user_id)
+    result = await create_discount_code(code, percent, max_uses, expires_at, 0)
     if not result:
         raise HTTPException(400, "کد تکراری است")
     return {"ok": True}
@@ -1031,7 +1023,6 @@ async def add_admin(request: Request, _=Depends(require_auth)):
     if not user_id:
         raise HTTPException(400, "user_id الزامی است")
     user_id = int(user_id)
-    global ADMIN_IDS
     ADMIN_IDS.add(user_id)
     await save_state()
     return {"ok": True}
@@ -1040,7 +1031,6 @@ async def add_admin(request: Request, _=Depends(require_auth)):
 async def remove_admin(user_id: int, _=Depends(require_auth)):
     if user_id == OWNER_ID:
         raise HTTPException(400, "نمی‌توان اونر را حذف کرد")
-    global ADMIN_IDS
     if user_id not in ADMIN_IDS:
         raise HTTPException(404, "ادمین یافت نشد")
     ADMIN_IDS.remove(user_id)
@@ -1135,7 +1125,7 @@ async def websocket_tunnel(ws: WebSocket, uuid: str):
 from xhttp import router as xhttp_router
 app.include_router(xhttp_router)
 
-# ── HTML Pages (پنل اصلی + مینی‌اپ) ─────────────────────────────────────────
+# ── HTML Pages ─────────────────────────────────────────────────────────────
 from pages import LOGIN_HTML, DASHBOARD_HTML, CYRUS_MINIAPP_HTML, get_public_page_html
 
 @app.get("/login", response_class=HTMLResponse)
@@ -1210,7 +1200,7 @@ async def public_sub_data(uuid_key: str, request: Request):
         "links": links_out,
     }
 
-# ── مینی‌اپ Cyrus Bot ──────────────────────────────────────────────────────
+# ── مینی‌اپ ──────────────────────────────────────────────────────────────
 @app.get("/cyrus", response_class=HTMLResponse)
 async def cyrus_mini_app(request: Request):
     return HTMLResponse(content=CYRUS_MINIAPP_HTML)
@@ -1266,14 +1256,13 @@ async def http_proxy(target_url: str, request: Request):
         error_logs.append({"error": str(exc), "url": target_url, "time": datetime.now().isoformat()})
         raise HTTPException(status_code=502, detail=f"Proxy error: {exc}")
 
-# ── Telegram bot (اختیاری) ──────────────────────────────────────────────────
-try:
-    from telegram_bot import start_bot as _tg_start_bot, stop_bot as _tg_stop_bot
-except ImportError:
-    async def _tg_start_bot():
-        logger.warning("telegram_bot.py پیدا نشد - ربات تلگرام غیرفعال است")
-    async def _tg_stop_bot():
-        pass
+# ── Telegram Bot: غیرفعال ──────────────────────────────────────────────────
+# فایل telegram_bot.py توی مخزن می‌مونه برای آینده، ولی فعلاً non-fa'al
+async def _tg_start_bot():
+    logger.info("Telegram bot disabled — panel only mode")
+
+async def _tg_stop_bot():
+    pass
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 def parse_size_to_bytes(value: float, unit: str) -> int:
