@@ -1,7 +1,7 @@
 # main.py
 # TK-SX v3.0 - هسته اصلی با Sing-box، کیف پول، کارت، معرفی، تخفیف، قرعه‌کشی
 # پشتیبانی از: VLESS, VMess, Trojan, Shadowsocks, SOCKS5, HTTP, WireGuard, Hysteria2, TUN, Dokodemo-door, Snell
-# UDP over TCP فعال برای WireGuard و Hysteria2
+# UDP over TCP فعال برای VLESS+WS و WireGuard و Hysteria2
 
 import asyncio
 import json
@@ -67,11 +67,22 @@ CONFIG = {
     "stars_rate": int(os.environ.get("STARS_RATE", 1000)),
 }
 
+# ── CORS (اصلاح‌شده) ──────────────────────────────────────────────────────────
+_allowed_origins = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+_railway_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN")
+if _railway_domain:
+    _allowed_origins.append(f"https://{_railway_domain}")
+    _allowed_origins.append(f"http://{_railway_domain}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_allowed_origins,
+    allow_origin_regex=r"https://.*\.up\.railway\.app",
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -96,18 +107,17 @@ CARD_OWNER_NAME = os.environ.get("CARD_OWNER_NAME", "نام صاحب کارت")
 PRICE_PER_GB = float(os.environ.get("PRICE_PER_GB", "6"))
 ADMIN_GROUP_ID = int(os.environ.get("ADMIN_GROUP_ID", 0)) or None
 
-# ===== سیستم‌های جدید (کیف پول، کارت، معرفی، تخفیف، قرعه‌کشی) =====
-WALLETS: Dict[int, dict] = {}  # user_id -> {"balance": int, "frozen": int}
+WALLETS: Dict[int, dict] = {}
 WALLETS_LOCK = asyncio.Lock()
 TRANSACTIONS: list = []
 
-USER_CARDS: Dict[int, dict] = {}  # user_id -> {"card_number": str, "full_name": str, "status": str, ...}
+USER_CARDS: Dict[int, dict] = {}
 CARDS_LOCK = asyncio.Lock()
 
-REFERRALS: Dict[int, dict] = {}  # user_id -> {"code": str, "referred_by": int, "earnings": int, "referred_users": list}
+REFERRALS: Dict[int, dict] = {}
 REFERRALS_LOCK = asyncio.Lock()
 
-DISCOUNT_CODES: Dict[str, dict] = {}  # code -> {"percent": int, "max_uses": int, "used_count": int, "expires_at": str}
+DISCOUNT_CODES: Dict[str, dict] = {}
 DISCOUNT_LOCK = asyncio.Lock()
 
 LOTTERY: dict = {
@@ -504,7 +514,10 @@ async def startup():
     http_client = httpx.AsyncClient(limits=limits, timeout=timeout, follow_redirects=True)
     await load_state()
     await singbox_start()
-    await _tg_start_bot()
+    try:
+        await _tg_start_bot()
+    except Exception as e:
+        logger.warning(f"Telegram bot could not start: {e}")
     log_activity("system", "TK-SX سرور راه‌اندازی شد", "ok")
     logger.info(f"TK-SX v3.0 started on port {CONFIG['port']}")
 
@@ -512,7 +525,10 @@ async def startup():
 async def shutdown():
     await save_state()
     await singbox_stop()
-    await _tg_stop_bot()
+    try:
+        await _tg_stop_bot()
+    except Exception:
+        pass
     if http_client:
         await http_client.aclose()
 
@@ -656,8 +672,11 @@ async def update_link(uid: str, request: Request, _=Depends(require_auth)):
             sv = float(body.get("speed_limit_value") or 0)
             su = body.get("speed_limit_unit") or "MBIT"
             link["speed_limit_bytes"] = 0 if sv <= 0 else parse_speed_to_bytes(sv, su)
-            from speed_limit import reset_bucket
-            reset_bucket(uid)
+            try:
+                from speed_limit import reset_bucket
+                reset_bucket(uid)
+            except ImportError:
+                pass
     await save_state()
     return {"ok": True}
 
@@ -1194,12 +1213,10 @@ async def public_sub_data(uuid_key: str, request: Request):
 # ── مینی‌اپ Cyrus Bot ──────────────────────────────────────────────────────
 @app.get("/cyrus", response_class=HTMLResponse)
 async def cyrus_mini_app(request: Request):
-    """صفحه ورود مینی‌اپ Cyrus Bot (تم آبی-یخی-مشکی)"""
     return HTMLResponse(content=CYRUS_MINIAPP_HTML)
 
 @app.post("/api/miniapp/login")
 async def miniapp_login(request: Request):
-    """ورود از طریق مینی‌اپ"""
     body = await request.json()
     password = body.get("password")
     if hash_password(str(password)) != AUTH["password_hash"]:
@@ -1209,7 +1226,6 @@ async def miniapp_login(request: Request):
 
 @app.get("/api/miniapp/stats")
 async def miniapp_stats(request: Request, token: str = None):
-    """دریافت آمار برای مینی‌اپ"""
     if not token or not await is_valid_session(token):
         raise HTTPException(status_code=401, detail="unauthorized")
     async with LINKS_LOCK:
@@ -1250,8 +1266,14 @@ async def http_proxy(target_url: str, request: Request):
         error_logs.append({"error": str(exc), "url": target_url, "time": datetime.now().isoformat()})
         raise HTTPException(status_code=502, detail=f"Proxy error: {exc}")
 
-# ── Telegram bot ─────────────────────────────────────────────────────────────
-from telegram_bot import start_bot as _tg_start_bot, stop_bot as _tg_stop_bot
+# ── Telegram bot (اختیاری) ──────────────────────────────────────────────────
+try:
+    from telegram_bot import start_bot as _tg_start_bot, stop_bot as _tg_stop_bot
+except ImportError:
+    async def _tg_start_bot():
+        logger.warning("telegram_bot.py پیدا نشد - ربات تلگرام غیرفعال است")
+    async def _tg_stop_bot():
+        pass
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 def parse_size_to_bytes(value: float, unit: str) -> int:
