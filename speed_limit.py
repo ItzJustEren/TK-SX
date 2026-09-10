@@ -1,28 +1,79 @@
-# speed_limit.py - Token Bucket
-import asyncio, time
-from main import LINKS
-_buckets = {}
-MIN_RATE = 1024; MIN_BURST = 16*1024
-class _Bucket:
-    __slots__ = ("rate", "capacity", "tokens", "last")
-    def __init__(self, rate): self.rate = max(rate, MIN_RATE); self.capacity = max(self.rate, MIN_BURST); self.tokens = self.capacity; self.last = time.monotonic()
-    def _refill(self):
-        now = time.monotonic(); elapsed = now - self.last
-        if elapsed > 0: self.last = now; self.tokens = min(self.capacity, self.tokens + elapsed * self.rate)
-    async def consume(self, n):
-        while True:
-            self._refill()
-            if self.tokens >= n: self.tokens -= n; return
-            wait = (n - self.tokens) / self.rate
-            await asyncio.sleep(min(max(wait, 0.004), 0.5))
-def _get_bucket(uuid, rate):
-    b = _buckets.get(uuid)
-    if b is None or b.rate != max(rate, MIN_RATE): b = _Bucket(rate); _buckets[uuid] = b
-    return b
-async def throttle(uuid, nbytes):
-    if nbytes <= 0: return
-    link = LINKS.get(uuid)
-    rate = int((link or {}).get("speed_limit_bytes", 0) or 0)
-    if rate <= 0: return
-    await _get_bucket(uuid, rate).consume(nbytes)
-def reset_bucket(uuid): _buckets.pop(uuid, None)
+# speed_limit.py
+# Token Bucket rate limiter برای محدودیت سرعت هر کاربر
+
+import asyncio
+import time
+from typing import Dict
+
+# uuid -> bytes/sec (0 = بدون محدودیت)
+_limits: Dict[str, int] = {}
+
+# uuid -> {"tokens": float, "last": float}
+_buckets: Dict[str, dict] = {}
+
+# uuid -> asyncio.Lock
+_locks: Dict[str, asyncio.Lock] = {}
+
+
+def set_limit(uuid: str, bytes_per_sec: int):
+    """تنظیم محدودیت سرعت برای یه uuid (بایت بر ثانیه)"""
+    _limits[uuid] = max(0, int(bytes_per_sec))
+
+
+def get_limit(uuid: str) -> int:
+    return _limits.get(uuid, 0)
+
+
+def reset_bucket(uuid: str):
+    """پاک کردن bucket و lock یک uuid"""
+    _buckets.pop(uuid, None)
+    _locks.pop(uuid, None)
+
+
+def clear_all():
+    _limits.clear()
+    _buckets.clear()
+    _locks.clear()
+
+
+async def throttle(uuid: str, chunk_size: int):
+    """
+    Token Bucket rate limiter.
+    اگه محدودیتی برای uuid نباشه، فوری برمی‌گرده.
+    وگرنه، اگه لازم باشه، sleep میکنه تا token کافی داشته باشه.
+    """
+    limit = _limits.get(uuid, 0)
+    if limit <= 0:
+        return
+
+    lock = _locks.get(uuid)
+    if lock is None:
+        lock = asyncio.Lock()
+        _locks[uuid] = lock
+
+    async with lock:
+        now = time.monotonic()
+        bucket = _buckets.get(uuid)
+
+        if bucket is None:
+            bucket = {"tokens": float(limit), "last": now}
+            _buckets[uuid] = bucket
+
+        # شارژ مجدد tokenها بر اساس زمان گذشته
+        elapsed = now - bucket["last"]
+        if elapsed > 0:
+            bucket["tokens"] = min(float(limit), bucket["tokens"] + elapsed * limit)
+            bucket["last"] = now
+
+        # اگه token کافی داریم، فوری مصرف کن
+        if bucket["tokens"] >= chunk_size:
+            bucket["tokens"] -= chunk_size
+            return
+
+        # وگرنه، منتظر بمون
+        needed = chunk_size - bucket["tokens"]
+        wait_time = needed / limit  # ثانیه
+        await asyncio.sleep(wait_time)
+
+        bucket["tokens"] = 0.0
+        bucket["last"] = time.monotonic()
